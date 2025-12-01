@@ -435,6 +435,10 @@
         <textarea id="customerAddress" placeholder="Street, house number, building, and clear delivery details"></textarea>
       </div>
       <div>
+        <label class="field-label" for="customerDeliveryDate">Delivery date</label>
+        <input id="customerDeliveryDate" type="date" />
+      </div>
+      <div>
         <label class="field-label" for="customerNotes">Notes (optional)</label>
         <textarea id="customerNotes" placeholder="Preferred delivery time, gate instructions, or other requests"></textarea>
       </div>
@@ -709,12 +713,42 @@
 
       const name = document.getElementById("customerName").value.trim();
       const address = document.getElementById("customerAddress").value.trim();
+      const deliveryDate = document.getElementById("customerDeliveryDate").value.trim();
       const notes = document.getElementById("customerNotes").value.trim();
 
-      if (!name || !address) {
-        alert("Please fill in your name and delivery address before continuing.");
+      if (!name || !address || !deliveryDate) {
+        alert("Please fill in your name, delivery address, and delivery date before continuing.");
         return null;
       }
+
+      // Validate delivery date is within allowed range
+      const selectedDate = new Date(deliveryDate);
+      const today = new Date();
+      const maxDate = new Date();
+      maxDate.setDate(today.getDate() + 7);
+      
+      // Reset time to compare dates only
+      selectedDate.setHours(0, 0, 0, 0);
+      today.setHours(0, 0, 0, 0);
+      maxDate.setHours(0, 0, 0, 0);
+      
+      if (selectedDate < today) {
+        alert("Delivery date cannot be in the past. Please select today or a future date.");
+        return null;
+      }
+      
+      if (selectedDate > maxDate) {
+        alert("Delivery date cannot be more than 7 days ahead. Please select an earlier date.");
+        return null;
+      }
+
+      // Format delivery date for display
+      const formattedDate = selectedDate.toLocaleDateString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric'
+      });
 
       let message = "Hello Tokyo Crumb,\nI'd like to place the following order:\n\n";
       let total = 0;
@@ -736,12 +770,27 @@
       message += `\nSubtotal: ${formatIDR(total)}\n\n`;
       message += `Name: ${name}\n`;
       message += `Delivery address: ${address}\n`;
+      message += `Delivery date: ${formattedDate}\n`;
       if (notes) {
         message += `Notes: ${notes}\n`;
       }
       message += "\nKindly confirm availability, delivery timing, and shipping fee. Thank you.";
 
       return message;
+    }
+
+    function setDeliveryDateConstraints() {
+      const deliveryDateInput = document.getElementById("customerDeliveryDate");
+      const today = new Date();
+      const maxDate = new Date();
+      maxDate.setDate(today.getDate() + 7);
+      
+      // Format dates for date input (YYYY-MM-DD)
+      const todayStr = today.toISOString().split('T')[0];
+      const maxDateStr = maxDate.toISOString().split('T')[0];
+      
+      deliveryDateInput.min = todayStr;
+      deliveryDateInput.max = maxDateStr;
     }
 
     document.getElementById("waButton").addEventListener("click", () => {
@@ -758,6 +807,7 @@
     });
     renderProducts();
     renderCart();
+    setDeliveryDateConstraints();
   </script>
 </body>
 </html>
