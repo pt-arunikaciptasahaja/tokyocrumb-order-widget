@@ -397,7 +397,8 @@
 
       /* Mobile-specific styles for date input */
       #customerDeliveryDate {
-        width: 100%; /* Match other field components */
+        width: calc(100% - 4px); /* Slightly smaller to prevent overflow */
+        max-width: calc(100vw - 48px); /* Prevent overflow on very small screens */
         font-size: 16px !important; /* Prevent zoom on iOS */
         padding: 12px 14px;
         min-height: 44px; /* Apple recommended minimum touch target */
@@ -405,6 +406,8 @@
         border: 2px solid rgba(230, 208, 177, 0.95);
         background: rgba(255, 252, 246, 0.96);
         color: #2f2620;
+        box-sizing: border-box;
+        overflow: hidden;
       }
 
       #customerDeliveryDate:focus {
