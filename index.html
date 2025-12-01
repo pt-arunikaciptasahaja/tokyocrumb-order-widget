@@ -394,6 +394,24 @@
         border-color: rgba(173, 138, 102, 1);
         box-shadow: 0 0 0 3px rgba(173, 138, 102, 0.3);
       }
+
+      /* Mobile-specific styles for date input */
+      #customerDeliveryDate {
+        width: 100%; /* Match other field components */
+        font-size: 16px !important; /* Prevent zoom on iOS */
+        padding: 12px 14px;
+        min-height: 44px; /* Apple recommended minimum touch target */
+        border-radius: 12px;
+        border: 2px solid rgba(230, 208, 177, 0.95);
+        background: rgba(255, 252, 246, 0.96);
+        color: #2f2620;
+      }
+
+      #customerDeliveryDate:focus {
+        outline: none;
+        border-color: rgba(211, 177, 132, 0.95);
+        box-shadow: 0 0 0 3px rgba(211, 177, 132, 0.3);
+      }
     }
   </style>
 </head>
