@@ -759,19 +759,21 @@
         return null;
       }
 
-      // Validate delivery date is within allowed range
-      const selectedDate = new Date(deliveryDate);
-      const today = new Date();
-      const maxDate = new Date();
-      maxDate.setDate(today.getDate() + 7);
+      // Validate delivery date is within allowed range (tomorrow to 7 days from tomorrow)
+      const selectedDateParts = deliveryDate.split('-').map(Number);
+      const selectedDate = new Date(selectedDateParts[0], selectedDateParts[1] - 1, selectedDateParts[2]);
       
-      // Reset time to compare dates only
+      const today = new Date();
+      const minDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 1); // Tomorrow
+      const maxDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 7); // 7 days from today
+      
+      // Reset time to midnight local for comparison
       selectedDate.setHours(0, 0, 0, 0);
-      today.setHours(0, 0, 0, 0);
+      minDate.setHours(0, 0, 0, 0);
       maxDate.setHours(0, 0, 0, 0);
       
-      if (selectedDate < today) {
-        alert("Delivery date cannot be in the past. Please select today or a future date.");
+      if (selectedDate < minDate) {
+        alert("Delivery date must be at least tomorrow. Please select a valid date.");
         return null;
       }
       
@@ -820,15 +822,24 @@
     function setDeliveryDateConstraints() {
       const deliveryDateInput = document.getElementById("customerDeliveryDate");
       const today = new Date();
+      const minDate = new Date();
+      minDate.setDate(today.getDate() + 1); // Tomorrow
       const maxDate = new Date();
-      maxDate.setDate(today.getDate() + 7);
+      maxDate.setDate(minDate.getDate() + 6); // 7 days from tomorrow (min + 6)
       
-      // Format dates for date input (YYYY-MM-DD)
-      const todayStr = today.toISOString().split('T')[0];
-      const maxDateStr = maxDate.toISOString().split('T')[0];
+      // Format dates for date input using local timezone (YYYY-MM-DD)
+      const minDateStr = formatDateForInput(minDate);
+      const maxDateStr = formatDateForInput(maxDate);
       
-      deliveryDateInput.min = todayStr;
+      deliveryDateInput.min = minDateStr;
       deliveryDateInput.max = maxDateStr;
+    }
+
+    function formatDateForInput(date) {
+      const year = date.getFullYear();
+      const month = String(date.getMonth() + 1).padStart(2, '0');
+      const day = String(date.getDate()).padStart(2, '0');
+      return `${year}-${month}-${day}`;
     }
 
     document.getElementById("waButton").addEventListener("click", () => {
