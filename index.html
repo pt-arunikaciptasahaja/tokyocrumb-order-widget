@@ -469,6 +469,11 @@
         <input id="customerName" type="text" placeholder="Recipient full name" />
       </div>
       <div>
+        <label class="field-label" for="customerMobileNumber">Mobile number</label>
+        <input id="customerMobileNumber" type="tel" placeholder="Recipient WhatsApp number" inputmode="numeric" />
+        <div id="mobileNumberHelper" class="field-helper" style="color: #ff4444; font-size: 0.7rem; margin-top: 4px; display: none;">The number should start with "08"</div>
+      </div>
+      <div>
         <label class="field-label" for="customerAddress">Delivery address</label>
         <textarea id="customerAddress" placeholder="Street, house number, building, and clear delivery details"></textarea>
       </div>
@@ -750,12 +755,24 @@
       }
 
       const name = document.getElementById("customerName").value.trim();
+      const mobileNumber = document.getElementById("customerMobileNumber").value.trim();
       const address = document.getElementById("customerAddress").value.trim();
       const deliveryDate = document.getElementById("customerDeliveryDate").value.trim();
       const notes = document.getElementById("customerNotes").value.trim();
 
-      if (!name || !address || !deliveryDate) {
-        alert("Please fill in your name, delivery address, and delivery date before continuing.");
+      // Capitalize first letter of name, address, and notes
+      const capitalizedName = name ? name.charAt(0).toUpperCase() + name.slice(1) : name;
+      const capitalizedAddress = address ? address.charAt(0).toUpperCase() + address.slice(1) : address;
+      const capitalizedNotes = notes ? notes.charAt(0).toUpperCase() + notes.slice(1) : notes;
+
+      if (!name || !mobileNumber || !address || !deliveryDate) {
+        alert("Please fill in your name, mobile number, delivery address, and delivery date before continuing.");
+        return null;
+      }
+
+      // Validate mobile number: starts with 08 and 9-15 digits total
+      if (!mobileNumber.startsWith("08") || !/^\d{9,15}$/.test(mobileNumber)) {
+        alert("Please enter a valid Indonesian phone number starting with 08 (9-15 digits total).");
         return null;
       }
 
@@ -808,11 +825,12 @@
       });
 
       message += `\nSubtotal: ${formatIDR(total)}\n\n`;
-      message += `Name: ${name}\n`;
-      message += `Delivery address: ${address}\n`;
-      message += `Delivery date: ${formattedDate}\n`;
-      if (notes) {
-        message += `Notes: ${notes}\n`;
+      message += `Name: ${capitalizedName}\n`;
+      message += `Mobile Number: ${mobileNumber}\n`;
+      message += `Delivery Address: ${capitalizedAddress}\n`;
+      message += `Delivery Date: ${formattedDate}\n`;
+      if (capitalizedNotes) {
+        message += `Notes: ${capitalizedNotes}\n`;
       }
       message += "\nKindly confirm availability, delivery timing, and shipping fee. Thank you.";
 
@@ -825,22 +843,41 @@
       const minDate = new Date();
       minDate.setDate(today.getDate() + 1); // Tomorrow
       const maxDate = new Date();
-      maxDate.setDate(minDate.getDate() + 6); // 7 days from tomorrow (min + 6)
+      maxDate.setDate(today.getDate() + 7); // 7 days from today
       
-      // Format dates for date input using local timezone (YYYY-MM-DD)
-      const minDateStr = formatDateForInput(minDate);
-      const maxDateStr = formatDateForInput(maxDate);
+      // Format dates for date input - use local date components for better iOS compatibility
+      const todayLocal = new Date(today.getTime() - today.getTimezoneOffset() * 60000);
+      const minDateLocal = new Date(minDate.getTime() - minDate.getTimezoneOffset() * 60000);
+      const maxDateLocal = new Date(maxDate.getTime() - maxDate.getTimezoneOffset() * 60000);
+      
+      const todayStr = todayLocal.toISOString().split('T')[0];
+      const minDateStr = minDateLocal.toISOString().split('T')[0];
+      const maxDateStr = maxDateLocal.toISOString().split('T')[0];
       
       deliveryDateInput.min = minDateStr;
       deliveryDateInput.max = maxDateStr;
     }
 
-    function formatDateForInput(date) {
-      const year = date.getFullYear();
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const day = String(date.getDate()).padStart(2, '0');
-      return `${year}-${month}-${day}`;
-    }
+    // Validate mobile number input - only allow digits
+    const mobileNumberInput = document.getElementById("customerMobileNumber");
+    const mobileNumberHelper = document.getElementById("mobileNumberHelper");
+    
+    mobileNumberInput.addEventListener("input", (e) => {
+      // Remove non-digit characters
+      e.target.value = e.target.value.replace(/\D/g, '');
+      
+      // Limit to maximum 15 digits
+      if (e.target.value.length > 15) {
+        e.target.value = e.target.value.slice(0, 15);
+      }
+      
+      // Show/hide helper text based on whether number starts with 08
+      if (e.target.value.length > 0 && !e.target.value.startsWith("08")) {
+        mobileNumberHelper.style.display = "block";
+      } else {
+        mobileNumberHelper.style.display = "none";
+      }
+    });
 
     document.getElementById("waButton").addEventListener("click", () => {
       const text = buildWhatsAppMessage();
