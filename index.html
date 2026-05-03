@@ -623,21 +623,22 @@
           { size: "2-slice pack", price: 20000 }
         ]
       },
-      {
-        id: "wheat-bread",
-        name: "Wheat Bread",
-        image: "https://res.cloudinary.com/dodmwwp1w/image/upload/v1764508463/Screenshot_2025-11-30_at_20.13.21_ouy9zy.png",
-        note: "Light wheat loaf with a tender crumb.",
-        isNew: true,
-        variants: [
-          { size: "Whole sliced loaf", price: 89000 },
-          { size: "2-slice pack", price: 20000 }
-        ]
-      },
+      // {
+      //   id: "wheat-bread",
+      //   name: "Wheat Bread",
+      //   image: "https://res.cloudinary.com/dodmwwp1w/image/upload/v1764508463/Screenshot_2025-11-30_at_20.13.21_ouy9zy.png",
+      //   note: "Light wheat loaf with a tender crumb.",
+      //   isNew: true,
+      //   variants: [
+      //     { size: "Whole sliced loaf", price: 89000 },
+      //     { size: "2-slice pack", price: 20000 }
+      //   ]
+      // },
       {
         id: "cheese-filled-bread",
         name: "Cheese-filled Bread",
-        image: "https://res.cloudinary.com/dodmwwp1w/image/upload/v1764508463/Screenshot_2025-11-30_at_20.13.09_wyv3q7.png",
+        image: "https://res.cloudinary.com/dodmwwp1w/image/upload/v1777832537/cheese_filled_iffhdy.png",
+        imageScale: 2.2,
         note: "Rich cheese filling layered through the loaf.",
         isNew: true,
         variants: [
@@ -648,7 +649,8 @@
       {
         id: "chocolate-filled-bread",
         name: "Chocolate-filled Bread",
-        image: "https://res.cloudinary.com/dodmwwp1w/image/upload/v1764508463/Screenshot_2025-11-30_at_20.13.14_h7e0gp.png",
+        image: "https://res.cloudinary.com/dodmwwp1w/image/upload/v1777832449/choco_filled_chploe.png",
+        imageScale: 2.2,
         note: "Soft loaf with smooth chocolate filling.",
         isNew: true,
         variants: [
@@ -656,15 +658,38 @@
           { size: "2-slice pack", price: 20000 }
         ]
       },
+      // {
+      //   id: "vegan-wheat-bread",
+      //   name: "Vegan Wheat Bread",
+      //   image: "https://res.cloudinary.com/dodmwwp1w/image/upload/v1764508463/Screenshot_2025-11-30_at_20.13.37_qjzy5a.png",
+      //   note: "Plant-based loaf with seeds and nuts.",
+      //   isNew: true,
+      //   variants: [
+      //     { size: "Whole sliced loaf", price: 89000 },
+      //     { size: "2-slice pack", price: 20000 }
+      //   ]
+      // },
       {
-        id: "vegan-wheat-bread",
-        name: "Vegan Wheat Bread",
-        image: "https://res.cloudinary.com/dodmwwp1w/image/upload/v1764508463/Screenshot_2025-11-30_at_20.13.37_qjzy5a.png",
-        note: "Plant-based loaf with seeds and nuts.",
+        id: "sausage-cheese-bread",
+        name: "Sausage Cheese Bread",
+        image: "https://res.cloudinary.com/dodmwwp1w/image/upload/v1777831595/b923ad085a45d6109af3764ab39f48c4_eecilq.png",
+        imageScale: 2.2,
+        note: "Savory loaf with sausage and melted cheese.",
         isNew: true,
         variants: [
           { size: "Whole sliced loaf", price: 89000 },
           { size: "2-slice pack", price: 20000 }
+        ]
+      },
+      {
+        id: "double-choco-bread",
+        name: "Double Choco Bread",
+        image: "https://res.cloudinary.com/dodmwwp1w/image/upload/v1777831594/9fa9d72093ca1d5076e82720a96d3fb6_awp2hn.png",
+        imageScale: 2.2,
+        note: "Double chocolate loaf, available in whole sliced loaf only.",
+        isNew: true,
+        variants: [
+          { size: "Whole sliced loaf", price: 89000 }
         ]
       }
     ];
@@ -694,6 +719,10 @@
         const img = document.createElement("img");
         img.src = p.image;
         img.alt = p.name;
+        if (p.imageScale) {
+          img.style.transform = `scale(${p.imageScale})`;
+          img.style.transformOrigin = "center";
+        }
         imgWrap.appendChild(img);
 
         const content = document.createElement("div");
