@@ -725,8 +725,8 @@
         ingredients: "High-Protein Flour, Sugar, Salt, Milk, Butter, Whipping Cream, Eggs",
         isNew: false,
         variants: [
-          { size: "Loaf 10x10cm (5 Slices)", price: 50000 },
-          { size: "Loaf 20x10cm (10 slices)", price: 79000 }
+          { size: "Loaf 20x10cm (10 slices)", price: 79000 },
+          { size: "Loaf 10x10cm (5 Slices)", price: 50000 }
         ]
       },
       {
@@ -738,8 +738,8 @@
         ingredients: "High-Protein Flour, Sugar, Salt, Milk, Butter, Whipping Cream, Eggs, Cheese",
         isNew: false,
         variants: [
-          { size: "Loaf 10x10cm (5 Slices)", price: 50000 },
-          { size: "Loaf 20x10cm (10 slices)", price: 89000 }
+          { size: "Loaf 20x10cm (10 slices)", price: 89000 },
+          { size: "Loaf 10x10cm (5 Slices)", price: 50000 }
         ]
       },
       {
@@ -751,8 +751,8 @@
         ingredients: "High-Protein Flour, Sugar, Salt, Milk, Butter, Whipping Cream, Eggs, Chocolate",
         isNew: false,
         variants: [
-          { size: "Loaf 10x10cm (5 Slices)", price: 50000 },
-          { size: "Loaf 20x10cm (10 slices)", price: 89000 }
+          { size: "Loaf 20x10cm (10 slices)", price: 89000 },
+          { size: "Loaf 10x10cm (5 Slices)", price: 50000 }
         ]
       },
       {
@@ -764,8 +764,8 @@
         ingredients: "High-Protein Flour, Sugar, Salt, Milk, Butter, Whipping Cream, Eggs, Sausage, Cheese",
         isNew: true,
         variants: [
-          { size: "Loaf 10x10cm (5 Slices)", price: 50000 },
-          { size: "Loaf 20x10cm (10 slices)", price: 89000 }
+          { size: "Loaf 20x10cm (10 slices)", price: 89000 },
+          { size: "Loaf 10x10cm (5 Slices)", price: 50000 }
         ]
       },
       {
@@ -777,8 +777,8 @@
         ingredients: "High-Protein Flour, Sugar, Salt, Milk, Butter, Whipping Cream, Eggs, Cocoa Powder, Chocolate",
         isNew: true,
         variants: [
-          { size: "Loaf 10x10cm (5 Slices)", price: 50000 },
-          { size: "Loaf 20x10cm (10 slices)", price: 89000 }
+          { size: "Loaf 20x10cm (10 slices)", price: 89000 },
+          { size: "Loaf 10x10cm (5 Slices)", price: 50000 }
         ]
       }
     ];
@@ -964,7 +964,14 @@
       const cartTotalRow = document.getElementById("cart-total-row");
       const cartTotalEl = document.getElementById("cart-total");
 
-      const entries = Object.entries(cart);
+      const entries = Object.entries(cart).sort(([a], [b]) => {
+        const [aId, aVi] = a.split("__");
+        const [bId, bVi] = b.split("__");
+        const aOrder = products.findIndex(p => p.id === aId);
+        const bOrder = products.findIndex(p => p.id === bId);
+        if (aOrder !== bOrder) return aOrder - bOrder;
+        return parseInt(aVi, 10) - parseInt(bVi, 10);
+      });
       if (entries.length === 0) {
         cartItemsEl.innerHTML = "";
         cartEmptyEl.style.display = "block";
