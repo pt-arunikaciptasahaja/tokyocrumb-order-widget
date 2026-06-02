@@ -14,7 +14,7 @@
   fbq('init', '1508440487079448');
   fbq('track', 'PageView');
   </script>
-  <noscript><img height="1" width="1" style="display:none"
+  <noscript><img height="1" width="1" style="display:none" alt=""
   src="https://www.facebook.com/tr?id=1508440487079448&ev=PageView&noscript=1"
   /></noscript>
   <!-- End Meta Pixel Code -->
@@ -160,11 +160,18 @@
       width: 100%;
       border-radius: 999px;
       border: 1px solid rgba(173, 138, 102, 0.65);
-      padding: 6px 11px;
+      padding: 6px 36px 6px 11px;
       font-size: 1rem;
       background: #faf3e9;
       box-sizing: border-box;
       color: #4a3827;
+      appearance: none;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%234a3827' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
+      background-repeat: no-repeat;
+      background-position: right 10px center;
+      background-size: 16px;
     }
 
     .variant-select:focus {
@@ -403,11 +410,7 @@
         appearance: none;
         -webkit-appearance: none;
         -moz-appearance: none;
-        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6,9 12,15 18,9'%3e%3c/polyline%3e%3c/svg%3e");
-        background-repeat: no-repeat;
-        background-position: right 12px center;
-        background-size: 20px;
-        padding-right: 40px; /* Space for dropdown arrow */
+        background-image: none;
       }
 
       .variant-select:focus {
@@ -436,6 +439,93 @@
         border-color: rgba(211, 177, 132, 0.95);
         box-shadow: 0 0 0 3px rgba(211, 177, 132, 0.3);
       }
+    }
+
+    /* Product image clickable */
+    .product-image-wrap {
+      cursor: pointer;
+    }
+    .product-image-wrap:hover img {
+      opacity: 0.85;
+      transition: opacity 0.2s;
+    }
+
+    /* Modal */
+    .modal-overlay {
+      border: none;
+      padding: 20px;
+      background: transparent;
+      max-width: 100%;
+      width: 100%;
+      height: 100%;
+      position: fixed;
+      inset: 0;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+    }
+    .modal-overlay:not([open]) {
+      display: none;
+    }
+    .modal-overlay::backdrop {
+      background: rgba(0, 0, 0, 0.5);
+    }
+    .modal-box {
+      background: #faf3e9;
+      border-radius: 16px;
+      max-width: 380px;
+      width: 100%;
+      margin: auto;
+      padding: 24px;
+      position: relative;
+      text-align: center;
+    }
+    .modal-close {
+      position: absolute;
+      top: 12px;
+      right: 14px;
+      background: none;
+      border: none;
+      font-size: 1.6rem;
+      line-height: 1;
+      color: #4a3827;
+      cursor: pointer;
+      padding: 0;
+    }
+    .modal-img-wrap {
+      width: 180px;
+      height: 180px;
+      margin: 0 auto 16px;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .modal-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    .modal-name {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #2c1a0e;
+      margin-bottom: 8px;
+    }
+    .modal-ingredients-label {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #9b7a55;
+      margin-bottom: 4px;
+    }
+    .modal-ingredients {
+      font-size: 0.9rem;
+      color: #4a3827;
+      font-style: italic;
+      line-height: 1.5;
     }
   </style>
 </head>
@@ -581,6 +671,21 @@
     </div>
   </div>
 
+  <!-- PRODUCT DETAIL MODAL -->
+  <dialog id="product-modal" class="modal-overlay" aria-labelledby="modal-name">
+    <div class="modal-box">
+      <button class="modal-close" id="modal-close" aria-label="Close">&times;</button>
+      <div class="modal-img-wrap">
+        <img id="modal-img" src="" alt="" />
+      </div>
+      <div class="modal-info">
+        <div id="modal-name" class="modal-name"></div>
+        <div class="modal-ingredients-label">Ingredients</div>
+        <div id="modal-ingredients" class="modal-ingredients"></div>
+      </div>
+    </div>
+  </dialog>
+
   <script>
     function isRamadanPauseActive() {
       const now = new Date();
@@ -617,33 +722,24 @@
         name: "White Bread",
         image: "https://res.cloudinary.com/dodmwwp1w/image/upload/v1764508463/Screenshot_2025-11-30_at_20.13.00_sbwvlj.png",
         note: "Soft Japanese-style white loaf.",
-        isNew: true,
+        ingredients: "High-Protein Flour, Sugar, Salt, Milk, Butter, Whipping Cream, Eggs",
+        isNew: false,
         variants: [
-          { size: "Whole sliced loaf", price: 79000 },
-          { size: "2-slice pack", price: 20000 }
+          { size: "Loaf 10x10cm (5 Slices)", price: 50000 },
+          { size: "Loaf 20x10cm (10 slices)", price: 79000 }
         ]
       },
-      // {
-      //   id: "wheat-bread",
-      //   name: "Wheat Bread",
-      //   image: "https://res.cloudinary.com/dodmwwp1w/image/upload/v1764508463/Screenshot_2025-11-30_at_20.13.21_ouy9zy.png",
-      //   note: "Light wheat loaf with a tender crumb.",
-      //   isNew: true,
-      //   variants: [
-      //     { size: "Whole sliced loaf", price: 89000 },
-      //     { size: "2-slice pack", price: 20000 }
-      //   ]
-      // },
       {
         id: "cheese-filled-bread",
         name: "Cheese-filled Bread",
         image: "https://res.cloudinary.com/dodmwwp1w/image/upload/v1777832537/cheese_filled_iffhdy.png",
         imageScale: 2.2,
         note: "Rich cheese filling layered through the loaf.",
-        isNew: true,
+        ingredients: "High-Protein Flour, Sugar, Salt, Milk, Butter, Whipping Cream, Eggs, Cheese",
+        isNew: false,
         variants: [
-          { size: "Whole sliced loaf", price: 89000 },
-          { size: "2-slice pack", price: 20000 }
+          { size: "Loaf 10x10cm (5 Slices)", price: 50000 },
+          { size: "Loaf 20x10cm (10 slices)", price: 89000 }
         ]
       },
       {
@@ -652,33 +748,24 @@
         image: "https://res.cloudinary.com/dodmwwp1w/image/upload/v1777832449/choco_filled_chploe.png",
         imageScale: 2.2,
         note: "Soft loaf with smooth chocolate filling.",
-        isNew: true,
+        ingredients: "High-Protein Flour, Sugar, Salt, Milk, Butter, Whipping Cream, Eggs, Chocolate",
+        isNew: false,
         variants: [
-          { size: "Whole sliced loaf", price: 89000 },
-          { size: "2-slice pack", price: 20000 }
+          { size: "Loaf 10x10cm (5 Slices)", price: 50000 },
+          { size: "Loaf 20x10cm (10 slices)", price: 89000 }
         ]
       },
-      // {
-      //   id: "vegan-wheat-bread",
-      //   name: "Vegan Wheat Bread",
-      //   image: "https://res.cloudinary.com/dodmwwp1w/image/upload/v1764508463/Screenshot_2025-11-30_at_20.13.37_qjzy5a.png",
-      //   note: "Plant-based loaf with seeds and nuts.",
-      //   isNew: true,
-      //   variants: [
-      //     { size: "Whole sliced loaf", price: 89000 },
-      //     { size: "2-slice pack", price: 20000 }
-      //   ]
-      // },
       {
         id: "sausage-cheese-bread",
         name: "Sausage Cheese Bread",
         image: "https://res.cloudinary.com/dodmwwp1w/image/upload/v1777831595/b923ad085a45d6109af3764ab39f48c4_eecilq.png",
         imageScale: 2.2,
         note: "Savory loaf with sausage and melted cheese.",
+        ingredients: "High-Protein Flour, Sugar, Salt, Milk, Butter, Whipping Cream, Eggs, Sausage, Cheese",
         isNew: true,
         variants: [
-          { size: "Whole sliced loaf", price: 89000 },
-          { size: "2-slice pack", price: 20000 }
+          { size: "Loaf 10x10cm (5 Slices)", price: 50000 },
+          { size: "Loaf 20x10cm (10 slices)", price: 89000 }
         ]
       },
       {
@@ -686,16 +773,32 @@
         name: "Double Choco Bread",
         image: "https://res.cloudinary.com/dodmwwp1w/image/upload/v1777831594/9fa9d72093ca1d5076e82720a96d3fb6_awp2hn.png",
         imageScale: 2.2,
-        note: "Double chocolate loaf, available in whole sliced loaf only.",
+        note: "Double chocolate loaf with rich cocoa flavor.",
+        ingredients: "High-Protein Flour, Sugar, Salt, Milk, Butter, Whipping Cream, Eggs, Cocoa Powder, Chocolate",
         isNew: true,
         variants: [
-          { size: "Whole sliced loaf", price: 89000 }
+          { size: "Loaf 10x10cm (5 Slices)", price: 50000 },
+          { size: "Loaf 20x10cm (10 slices)", price: 89000 }
         ]
       }
     ];
 
     const cart = {};              // key: productId__variantIndex -> quantity
     const selectedVariants = {};  // productId -> variantIndex
+
+    function saveState() {
+      localStorage.setItem("tc_cart", JSON.stringify(cart));
+      localStorage.setItem("tc_variants", JSON.stringify(selectedVariants));
+    }
+
+    function loadState() {
+      try {
+        const savedCart = localStorage.getItem("tc_cart");
+        const savedVariants = localStorage.getItem("tc_variants");
+        if (savedCart) Object.assign(cart, JSON.parse(savedCart));
+        if (savedVariants) Object.assign(selectedVariants, JSON.parse(savedVariants));
+      } catch (e) { /* ignore parse errors */ }
+    }
 
     function formatIDR(value) {
       return "Rp " + value.toLocaleString("id-ID");
@@ -724,6 +827,7 @@
           img.style.transformOrigin = "center";
         }
         imgWrap.appendChild(img);
+        imgWrap.addEventListener("click", () => openProductModal(p));
 
         const content = document.createElement("div");
         content.className = "product-content";
@@ -774,7 +878,12 @@
         variantSelect.addEventListener("change", (e) => {
           const newIndex = parseInt(e.target.value, 10);
           selectedVariants[p.id] = newIndex;
-          renderProducts();
+          const newKey = `${p.id}__${newIndex}`;
+          // Update price and qty display in-place
+          priceEl.textContent = p.variants[newIndex] ? formatIDR(p.variants[newIndex].price) : "";
+          qtyVal.dataset.qtyKey = newKey;
+          qtyVal.textContent = cart[newKey] || 0;
+          saveState();
           renderCart();
         });
 
@@ -797,16 +906,25 @@
         const minusBtn = document.createElement("button");
         minusBtn.className = "qty-btn";
         minusBtn.textContent = "−";
-        minusBtn.onclick = () => updateQuantity(p.id, selectedIndex, (cart[key] || 0) - 1);
+        minusBtn.onclick = () => {
+          const curIndex = selectedVariants[p.id] ?? 0;
+          const curKey = `${p.id}__${curIndex}`;
+          updateQuantity(p.id, curIndex, (cart[curKey] || 0) - 1);
+        };
 
         const qtyVal = document.createElement("span");
         qtyVal.className = "qty-value";
+        qtyVal.dataset.qtyKey = key;
         qtyVal.textContent = qty;
 
         const plusBtn = document.createElement("button");
         plusBtn.className = "qty-btn";
         plusBtn.textContent = "+";
-        plusBtn.onclick = () => updateQuantity(p.id, selectedIndex, (cart[key] || 0) + 1);
+        plusBtn.onclick = () => {
+          const curIndex = selectedVariants[p.id] ?? 0;
+          const curKey = `${p.id}__${curIndex}`;
+          updateQuantity(p.id, curIndex, (cart[curKey] || 0) + 1);
+        };
 
         qtyControls.appendChild(minusBtn);
         qtyControls.appendChild(qtyVal);
@@ -834,7 +952,9 @@
       } else {
         cart[key] = newQty;
       }
-      renderProducts();
+      saveState();
+      const qtyEl = document.querySelector(`[data-qty-key="${CSS.escape(key)}"]`);
+      if (qtyEl) qtyEl.textContent = cart[key] || 0;
       renderCart();
     }
 
@@ -871,7 +991,7 @@
         row.className = "cart-row";
 
         const left = document.createElement("span");
-        left.textContent = `${qty} × ${p.name} (${variant.size})`;
+        left.innerHTML = `<strong>${p.name}</strong><br><small>${variant.size} × ${qty}</small>`;
 
         const right = document.createElement("span");
         right.textContent = formatIDR(lineTotal);
@@ -1026,12 +1146,39 @@
     });
 
     // Initial setup
+    loadState();
     products.forEach(p => {
-      selectedVariants[p.id] = 0;
+      if (selectedVariants[p.id] === undefined) selectedVariants[p.id] = 0;
     });
     renderProducts();
     renderCart();
     setDeliveryDateConstraints();
+
+    // Modal logic
+    const modal = document.getElementById("product-modal");
+    const modalImg = document.getElementById("modal-img");
+    const modalName = document.getElementById("modal-name");
+    const modalIngredients = document.getElementById("modal-ingredients");
+
+    function openProductModal(p) {
+      modalImg.src = p.image;
+      modalImg.alt = p.name;
+      modalImg.style.transform = p.imageScale ? `scale(${p.imageScale})` : "";
+      modalName.textContent = p.name;
+      modalIngredients.textContent = p.ingredients || "";
+      modal.showModal();
+    }
+
+    document.getElementById("modal-close").addEventListener("click", () => {
+      modal.close();
+    });
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) modal.close();
+    });
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") modal.close();
+    });
   </script>
+
 </body>
 </html>
