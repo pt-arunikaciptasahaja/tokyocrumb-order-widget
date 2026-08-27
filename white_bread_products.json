@@ -1,0 +1,54 @@
+[
+  {
+    "id": "white-bread",
+    "category": "white",
+    "name": "White Bread",
+    "image": "https://tokyocrumb.com/_assets/media/09f6060bbda1bb6dbf4718965ee65b64.png",
+    "note": "Not stated on the Tokyo Crumb menu source.",
+    "ingredients": "Not stated on the Tokyo Crumb menu source.",
+    "isNew": false,
+    "variants": [
+      { "size": "5 Slices", "price": 50000 },
+      { "size": "10 Slices", "price": 79000 }
+    ]
+  },
+  {
+    "id": "chocolate-filled-bread",
+    "category": "white",
+    "name": "Chocolate-filled Bread",
+    "image": "https://tokyocrumb.com/_assets/media/df19411b945513f7f81748d85392c3e3.png",
+    "note": "Not stated on the Tokyo Crumb menu source.",
+    "ingredients": "Not stated on the Tokyo Crumb menu source.",
+    "isNew": false,
+    "variants": [
+      { "size": "5 Slices", "price": 50000 },
+      { "size": "10 Slices", "price": 89000 }
+    ]
+  },
+  {
+    "id": "cheese-filled-bread",
+    "category": "white",
+    "name": "Cheese-filled Bread",
+    "image": "https://tokyocrumb.com/_assets/media/6bd9f83e8aa75d56b137fed1f3db1ab1.png",
+    "note": "Not stated on the Tokyo Crumb menu source.",
+    "ingredients": "Not stated on the Tokyo Crumb menu source.",
+    "isNew": false,
+    "variants": [
+      { "size": "5 Slices", "price": 50000 },
+      { "size": "10 Slices", "price": 89000 }
+    ]
+  },
+  {
+    "id": "sausage-cheese-bread",
+    "category": "white",
+    "name": "Sausage Cheese Bread",
+    "image": "https://tokyocrumb.com/_assets/media/b923ad085a45d6109af3764ab39f48c4.png",
+    "note": "Not stated on the Tokyo Crumb menu source.",
+    "ingredients": "Not stated on the Tokyo Crumb menu source.",
+    "isNew": false,
+    "variants": [
+      { "size": "5 Slices", "price": 50000 },
+      { "size": "10 Slices", "price": 89000 }
+    ]
+  }
+]
