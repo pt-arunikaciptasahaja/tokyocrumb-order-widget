@@ -1235,7 +1235,7 @@
       }
     }
 
-    function buildWhatsAppMessage() {
+function buildWhatsAppMessage() {
       const entries = Object.entries(cart);
       if (entries.length === 0) {
         alert("Your cart is empty. Please add at least one item before sending your order.");
@@ -1275,8 +1275,8 @@
       const selectedDate = new Date(selectedDateParts[0], selectedDateParts[1] - 1, selectedDateParts[2]);
       
       const today = new Date();
-      const minDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 2); // Day after tomorrow
-      const maxDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 7); // 7 days from today
+      const minDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 2);
+      const maxDate = new Date(today.getFullYear(), today.getMonth(), today.getDate() + 7);
       
       // Reset time to midnight local for comparison
       selectedDate.setHours(0, 0, 0, 0);
@@ -1302,8 +1302,12 @@
       });
 
       let message = "Hello Tokyo Crumb,\nI'd like to place the following order:\n\n";
-      let total = 0;
+      
+      let grandTotal = 0;
+      const loafItems = [];
+      const sweetItems = [];
 
+      // Sort and group items
       entries.forEach(([key, qty]) => {
         const [productId, variantIndexStr] = key.split("__");
         const variantIndex = parseInt(variantIndexStr, 10);
@@ -1313,12 +1317,36 @@
         if (!variant) return;
 
         const lineTotal = variant.price * qty;
-        total += lineTotal;
+        grandTotal += lineTotal;
 
-        message += `• ${qty} × ${p.name} (${variant.size}) @ ${formatIDR(variant.price)} = ${formatIDR(lineTotal)}\n`;
+        // Clean up the text: hide the "(1 pcs)" text for sweet breads to make it read better
+        const sizeLabel = p.category === "sweet" ? "" : ` (${variant.size})`;
+        const itemText = `• ${qty} × ${p.name}${sizeLabel} @ ${formatIDR(variant.price)} = ${formatIDR(lineTotal)}`;
+
+        if (p.category === "sweet") {
+          sweetItems.push(itemText);
+        } else {
+          loafItems.push(itemText);
+        }
       });
 
-      message += `\nSubtotal: ${formatIDR(total)}\n\n`;
+      // Build the Loaves section
+      if (loafItems.length > 0) {
+        message += "*🍞 SIGNATURE LOAVES*\n";
+        message += loafItems.join("\n") + "\n\n";
+      }
+
+      // Build the Sweet Breads section
+      if (sweetItems.length > 0) {
+        message += `*🥐 SWEET BREADS (${sweetQuantity} pcs)*\n`;
+        message += sweetItems.join("\n") + "\n\n";
+      }
+
+      // Grand Total
+      message += `*💰 TOTAL ORDER: ${formatIDR(grandTotal)}*\n\n`;
+
+      // Customer Details
+      message += `*📦 DELIVERY DETAILS*\n`;
       message += `Name: ${capitalizedName}\n`;
       message += `Mobile Number: ${mobileNumber}\n`;
       message += `Delivery Address: ${capitalizedAddress}\n`;
@@ -1326,6 +1354,7 @@
       if (capitalizedNotes) {
         message += `Notes: ${capitalizedNotes}\n`;
       }
+      
       message += "\nKindly confirm availability, delivery timing, and shipping fee. Thank you.";
 
       return message;
