@@ -83,6 +83,43 @@
       margin: 16px 0 18px;
     }
 
+    .product-tabs {
+      display: flex;
+      gap: 8px;
+      margin-top: 16px;
+      padding: 4px;
+      background: rgba(255, 249, 235, 0.48);
+      border: 1px solid rgba(117, 81, 55, 0.2);
+      border-radius: 14px;
+    }
+
+    .product-tab {
+      flex: 1;
+      min-height: 40px;
+      border: 1px solid transparent;
+      border-radius: 10px;
+      padding: 8px 10px;
+      background: transparent;
+      color: #755137;
+      cursor: pointer;
+      font: inherit;
+      font-size: 0.82rem;
+      font-weight: 600;
+      transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+    }
+
+    .product-tab:hover,
+    .product-tab:focus-visible {
+      background: rgba(255, 249, 235, 0.8);
+      outline: none;
+    }
+
+    .product-tab.is-active {
+      background: #4b2c1b;
+      color: #fff7ea;
+      box-shadow: 0 3px 8px rgba(75, 44, 27, 0.22);
+    }
+
     .product-card {
       background: rgba(255, 249, 235, 0.96);
       border-radius: 16px;
@@ -282,6 +319,39 @@
       white-space: nowrap;
     }
 
+    .cart-line-action {
+      display: flex;
+      align-items: flex-start;
+      gap: 6px;
+    }
+
+    .cart-remove-btn {
+      border: 0;
+      padding: 2px 0;
+      background: transparent;
+      color: #9b4e32;
+      cursor: pointer;
+      font: inherit;
+      font-size: 0.72rem;
+      text-decoration: underline;
+    }
+
+    .cart-remove-btn:hover,
+    .cart-remove-btn:focus-visible {
+      color: #6f2e1a;
+      outline: none;
+    }
+
+    .cart-item-count {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 6px;
+      padding-top: 6px;
+      border-top: 1px solid rgba(221, 197, 166, 0.7);
+      color: #655347;
+      font-size: 0.8rem;
+    }
+
     .cart-total {
       display: flex;
       justify-content: space-between;
@@ -359,6 +429,29 @@
       transform: scale(0.98);
     }
 
+    .btn-wa:disabled {
+      background: #9b8a7b;
+      box-shadow: none;
+      cursor: not-allowed;
+      opacity: 0.82;
+    }
+
+    .btn-wa:disabled:active {
+      transform: none;
+    }
+
+    .cart-warning {
+      display: none;
+      margin: 0 0 10px;
+      padding: 9px 11px;
+      border: 1px solid rgba(157, 87, 51, 0.5);
+      border-radius: 10px;
+      background: #fff1df;
+      color: #7a4427;
+      font-size: 0.78rem;
+      line-height: 1.4;
+    }
+
     .btn-wa-label {
       letter-spacing: 0.06em;
       text-transform: uppercase;
@@ -387,6 +480,15 @@
       .qty-hint {
         white-space: normal;
         text-align: left;
+      }
+
+      .product-tabs {
+        gap: 6px;
+      }
+
+      .product-tab {
+        padding: 8px 6px;
+        font-size: 0.78rem;
       }
 
       .cart-row span {
@@ -620,6 +722,10 @@
     </div>
 
     <!-- PRODUCT LIST -->
+    <div class="product-tabs" role="tablist" aria-label="Product categories">
+      <button class="product-tab is-active" type="button" role="tab" aria-selected="true" data-category="loaf">Signature Loaves</button>
+      <button class="product-tab" type="button" role="tab" aria-selected="false" data-category="sweet">Sweet Breads</button>
+    </div>
     <div id="product-list" class="product-list"></div>
 
     <!-- CART SUMMARY -->
@@ -630,6 +736,10 @@
       </div>
       <div id="cart-items" class="cart-items"></div>
       <div id="cart-empty" class="cart-empty">Your cart is currently empty.</div>
+      <div id="cart-item-count-row" class="cart-item-count" style="display:none;">
+        <span>Total items</span>
+        <span id="cart-item-count"></span>
+      </div>
       <div id="cart-total-row" class="cart-total" style="display:none;">
         <span>Subtotal</span>
         <span id="cart-total"></span>
@@ -662,6 +772,7 @@
     </div>
 
     <!-- WHATSAPP CTA -->
+    <div id="cart-warning" class="cart-warning" role="alert" aria-live="polite"></div>
     <button id="waButton" class="btn-wa">
       <span class="btn-wa-label">Send order via WhatsApp</span>
     </button>
@@ -719,6 +830,7 @@
     const products = [
       {
         id: "white-bread",
+        category: "loaf",
         name: "White Bread",
         image: "https://res.cloudinary.com/dodmwwp1w/image/upload/v1764508463/Screenshot_2025-11-30_at_20.13.00_sbwvlj.png",
         note: "Soft Japanese-style white loaf.",
@@ -731,6 +843,7 @@
       },
       {
         id: "cheese-filled-bread",
+        category: "loaf",
         name: "Cheese-filled Bread",
         image: "https://res.cloudinary.com/dodmwwp1w/image/upload/v1777832537/cheese_filled_iffhdy.png",
         imageScale: 2.2,
@@ -744,6 +857,7 @@
       },
       {
         id: "chocolate-filled-bread",
+        category: "loaf",
         name: "Chocolate-filled Bread",
         image: "https://res.cloudinary.com/dodmwwp1w/image/upload/v1777832449/choco_filled_chploe.png",
         imageScale: 2.2,
@@ -757,6 +871,7 @@
       },
       {
         id: "sausage-cheese-bread",
+        category: "loaf",
         name: "Sausage Cheese Bread",
         image: "https://res.cloudinary.com/dodmwwp1w/image/upload/v1777831595/b923ad085a45d6109af3764ab39f48c4_eecilq.png",
         imageScale: 2.2,
@@ -770,6 +885,7 @@
       },
       {
         id: "double-choco-bread",
+        category: "loaf",
         name: "Double Choco Bread",
         image: "https://res.cloudinary.com/dodmwwp1w/image/upload/v1777831594/9fa9d72093ca1d5076e82720a96d3fb6_awp2hn.png",
         imageScale: 2.2,
@@ -780,11 +896,62 @@
           { size: "Loaf 20x10cm (10 slices)", price: 89000 },
           // { size: "Loaf 10x10cm (5 Slices)", price: 50000 }
         ]
+      },
+      {
+        id: "cheese-delight",
+        category: "sweet",
+        name: "Cheese Delight",
+        image: "https://tokyocrumb.com/_assets/media/8afeade895008e1bb2465b0d3af58dc9.png",
+        note: "Not stated on the Tokyo Crumb menu source.",
+        ingredients: "Not stated on the Tokyo Crumb menu source.",
+        isNew: false,
+        variants: [{ size: "1 pcs", price: 25000 }]
+      },
+      {
+        id: "choco-rich",
+        category: "sweet",
+        name: "Choco Rich",
+        image: "https://tokyocrumb.com/_assets/media/0f3b284f7d7038e67bf80ec39635f6fd.png",
+        note: "Not stated on the Tokyo Crumb menu source.",
+        ingredients: "Not stated on the Tokyo Crumb menu source.",
+        isNew: false,
+        variants: [{ size: "1 pcs", price: 25000 }]
+      },
+      {
+        id: "donut-bread",
+        category: "sweet",
+        name: "Donut Bread",
+        image: "https://tokyocrumb.com/_assets/media/92912a70a1573ddb4c4b98451a261b90.png",
+        note: "Topping: Choco / White Choco.",
+        ingredients: "Not stated on the Tokyo Crumb menu source.",
+        isNew: false,
+        variants: [{ size: "1 pcs", price: 20000 }]
+      },
+      {
+        id: "smoked-beef-cheese",
+        category: "sweet",
+        name: "Smoked Beef & Cheese",
+        image: "https://tokyocrumb.com/_assets/media/19360289f8f87a9a2c5897c4cae06926.png",
+        note: "Not stated on the Tokyo Crumb menu source.",
+        ingredients: "Not stated on the Tokyo Crumb menu source.",
+        isNew: false,
+        variants: [{ size: "1 pcs", price: 25000 }]
+      },
+      {
+        id: "sausage-roll",
+        category: "sweet",
+        name: "Sausage Roll",
+        image: "https://tokyocrumb.com/_assets/media/cb70b031829bdafaeeab088cc07d9db9.png",
+        note: "Not stated on the Tokyo Crumb menu source.",
+        ingredients: "Not stated on the Tokyo Crumb menu source.",
+        isNew: false,
+        variants: [{ size: "1 pcs", price: 30000 }]
       }
     ];
 
     const cart = {};              // key: productId__variantIndex -> quantity
     const selectedVariants = {};  // productId -> variantIndex
+    let activeCategory = "loaf";
 
     function saveState() {
       localStorage.setItem("tc_cart", JSON.stringify(cart));
@@ -808,7 +975,7 @@
       const list = document.getElementById("product-list");
       list.innerHTML = "";
 
-      products.forEach((p) => {
+      products.filter((p) => p.category === activeCategory).forEach((p) => {
         const selectedIndex = selectedVariants[p.id] ?? 0;
         const key = `${p.id}__${selectedIndex}`;
         const qty = cart[key] || 0;
@@ -891,11 +1058,13 @@
         topRow.appendChild(rightTop);
         content.appendChild(topRow);
 
-        // Create variant selector row for better mobile visibility
-        const variantRow = document.createElement("div");
-        variantRow.className = "variant-row";
-        variantRow.appendChild(variantSelect);
-        content.appendChild(variantRow);
+        // A selector adds no value for single-variant products such as Sweet Breads.
+        if (p.variants.length > 1) {
+          const variantRow = document.createElement("div");
+          variantRow.className = "variant-row";
+          variantRow.appendChild(variantSelect);
+          content.appendChild(variantRow);
+        }
 
         const qtyRow = document.createElement("div");
         qtyRow.className = "qty-row";
@@ -963,6 +1132,10 @@
       const cartEmptyEl = document.getElementById("cart-empty");
       const cartTotalRow = document.getElementById("cart-total-row");
       const cartTotalEl = document.getElementById("cart-total");
+      const cartItemCountRow = document.getElementById("cart-item-count-row");
+      const cartItemCountEl = document.getElementById("cart-item-count");
+
+      updateSweetBreadValidation();
 
       const entries = Object.entries(cart).sort(([a], [b]) => {
         const [aId, aVi] = a.split("__");
@@ -976,12 +1149,14 @@
         cartItemsEl.innerHTML = "";
         cartEmptyEl.style.display = "block";
         cartTotalRow.style.display = "none";
+        cartItemCountRow.style.display = "none";
         return;
       }
 
       cartEmptyEl.style.display = "none";
       cartItemsEl.innerHTML = "";
       let total = 0;
+      let itemCount = 0;
 
       entries.forEach(([key, qty]) => {
         const [productId, variantIndexStr] = key.split("__");
@@ -993,15 +1168,32 @@
 
         const lineTotal = variant.price * qty;
         total += lineTotal;
+        itemCount += qty;
 
         const row = document.createElement("div");
         row.className = "cart-row";
 
         const left = document.createElement("span");
-        left.innerHTML = `<strong>${p.name}</strong><br><small>${variant.size} × ${qty}</small>`;
+        const quantityLabel = p.category === "sweet"
+          ? `${qty} pc${qty === 1 ? "" : "s"}`
+          : `${variant.size} × ${qty}`;
+        left.innerHTML = `<strong>${p.name}</strong><br><small>${quantityLabel}</small>`;
 
-        const right = document.createElement("span");
-        right.textContent = formatIDR(lineTotal);
+        const right = document.createElement("div");
+        right.className = "cart-line-action";
+
+        const lineTotalEl = document.createElement("span");
+        lineTotalEl.textContent = formatIDR(lineTotal);
+
+        const removeBtn = document.createElement("button");
+        removeBtn.type = "button";
+        removeBtn.className = "cart-remove-btn";
+        removeBtn.textContent = "Remove";
+        removeBtn.setAttribute("aria-label", `Remove ${p.name} (${variant.size}) from order`);
+        removeBtn.addEventListener("click", () => updateQuantity(productId, variantIndex, 0));
+
+        right.appendChild(lineTotalEl);
+        right.appendChild(removeBtn);
 
         row.appendChild(left);
         row.appendChild(right);
@@ -1010,12 +1202,48 @@
 
       cartTotalEl.textContent = formatIDR(total);
       cartTotalRow.style.display = "flex";
+      cartItemCountEl.textContent = String(itemCount);
+      cartItemCountRow.style.display = "flex";
+    }
+
+    function getSweetBreadQuantity() {
+      return Object.entries(cart).reduce((total, [key, qty]) => {
+        const productId = key.split("__")[0];
+        const product = products.find((p) => p.id === productId);
+        return product && product.category === "sweet" ? total + qty : total;
+      }, 0);
+    }
+
+    function updateSweetBreadValidation() {
+      const sweetQuantity = getSweetBreadQuantity();
+      const waButton = document.getElementById("waButton");
+      const buttonLabel = waButton.querySelector(".btn-wa-label");
+      const warning = document.getElementById("cart-warning");
+
+      if (sweetQuantity > 0 && sweetQuantity < 8) {
+        const remaining = 8 - sweetQuantity;
+        waButton.disabled = true;
+        buttonLabel.textContent = `Add ${remaining} more Sweet Bread${remaining === 1 ? "" : "s"} to order`;
+        warning.textContent = `Sweet Breads have an 8-piece minimum order. Add ${remaining} more piece${remaining === 1 ? "" : "s"} to continue.`;
+        warning.style.display = "block";
+      } else {
+        waButton.disabled = false;
+        buttonLabel.textContent = "Send order via WhatsApp";
+        warning.textContent = "";
+        warning.style.display = "none";
+      }
     }
 
     function buildWhatsAppMessage() {
       const entries = Object.entries(cart);
       if (entries.length === 0) {
         alert("Your cart is empty. Please add at least one item before sending your order.");
+        return null;
+      }
+
+      const sweetQuantity = getSweetBreadQuantity();
+      if (sweetQuantity > 0 && sweetQuantity < 8) {
+        alert(`Sweet Breads have an 8-piece minimum order. Please add ${8 - sweetQuantity} more.`);
         return null;
       }
 
@@ -1150,6 +1378,18 @@
 
       const url = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(text)}`;
       window.open(url, "_blank");
+    });
+
+    document.querySelectorAll(".product-tab").forEach((tab) => {
+      tab.addEventListener("click", () => {
+        activeCategory = tab.dataset.category;
+        document.querySelectorAll(".product-tab").forEach((button) => {
+          const isActive = button === tab;
+          button.classList.toggle("is-active", isActive);
+          button.setAttribute("aria-selected", String(isActive));
+        });
+        renderProducts();
+      });
     });
 
     // Initial setup

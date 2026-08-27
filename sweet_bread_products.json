@@ -1,0 +1,62 @@
+[
+  {
+    "id": "cheese-delight",
+    "category": "sweet",
+    "name": "Cheese Delight",
+    "image": "https://tokyocrumb.com/_assets/media/0f3b284f7d7038e67bf80ec39635f6fd.png",
+    "note": "Not stated on the Tokyo Crumb menu source.",
+    "ingredients": "Not stated on the Tokyo Crumb menu source.",
+    "isNew": false,
+    "variants": [
+      { "size": "1 piece (inferred)", "price": 25000 }
+    ]
+  },
+  {
+    "id": "choco-rich",
+    "category": "sweet",
+    "name": "Choco Rich",
+    "image": "https://tokyocrumb.com/_assets/media/8afeade895008e1bb2465b0d3af58dc9.png",
+    "note": "Not stated on the Tokyo Crumb menu source.",
+    "ingredients": "Not stated on the Tokyo Crumb menu source.",
+    "isNew": false,
+    "variants": [
+      { "size": "1 piece (inferred)", "price": 25000 }
+    ]
+  },
+  {
+    "id": "donut-bread",
+    "category": "sweet",
+    "name": "Donut Bread",
+    "image": "https://tokyocrumb.com/_assets/media/92912a70a1573ddb4c4b98451a261b90.png",
+    "note": "Topping: Choco / White Choco.",
+    "ingredients": "Not stated on the Tokyo Crumb menu source.",
+    "isNew": false,
+    "variants": [
+      { "size": "1 piece (inferred)", "price": 20000 }
+    ]
+  },
+  {
+    "id": "smoked-beef-cheese",
+    "category": "sweet",
+    "name": "Smoked Beef & Cheese",
+    "image": "https://tokyocrumb.com/_assets/media/19360289f8f87a9a2c5897c4cae06926.png",
+    "note": "Not stated on the Tokyo Crumb menu source.",
+    "ingredients": "Not stated on the Tokyo Crumb menu source.",
+    "isNew": false,
+    "variants": [
+      { "size": "1 piece (inferred)", "price": 25000 }
+    ]
+  },
+  {
+    "id": "sausage-roll",
+    "category": "sweet",
+    "name": "Sausage Roll",
+    "image": "https://tokyocrumb.com/_assets/media/cb70b031829bdafaeeab088cc07d9db9.png",
+    "note": "Not stated on the Tokyo Crumb menu source.",
+    "ingredients": "Not stated on the Tokyo Crumb menu source.",
+    "isNew": false,
+    "variants": [
+      { "size": "1 piece (inferred)", "price": 30000 }
+    ]
+  }
+]
